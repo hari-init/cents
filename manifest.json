@@ -1,0 +1,43 @@
+{
+  "name": "Cents — Budget Tracker",
+  "short_name": "Cents",
+  "description": "Minimal expense management. Every cent accounted for.",
+  "start_url": "/cents/",
+  "scope": "/cents/",
+  "display": "standalone",
+  "background_color": "#F0F0F0",
+  "theme_color": "#0A0A0A",
+  "orientation": "portrait-primary",
+  "lang": "en",
+  "categories": ["finance", "productivity"],
+  "icons": [
+    {
+      "src": "/cents/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/cents/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/cents/icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Add Expense",
+      "short_name": "Add",
+      "description": "Log a new expense",
+      "url": "/cents/",
+      "icons": [{ "src": "/cents/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

@@ -4,9 +4,27 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="description" content="Cents — Minimal expense management. Track your budget with clarity." />
-  <meta name="theme-color" content="#F2F2F2" />
+  <meta name="theme-color" content="#0A0A0A" />
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/cents/manifest.json" />
+
+  <!-- iOS PWA -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Cents" />
+  <link rel="apple-touch-icon" href="/cents/icons/apple-touch-icon.png" />
+
+  <!-- Splash screen background for iOS -->
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <!-- Android / general -->
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="application-name" content="Cents" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="192x192" href="/cents/icons/icon-192.png" />
+
   <title>Cents — Minimal Budget Tracker</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -345,6 +363,30 @@ ul, ol { list-style: none; }
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/cents/sw.js', { scope: '/cents/' })
+          .then(reg => {
+            console.log('[Cents] SW registered, scope:', reg.scope);
+            // Check for updates every time the app loads
+            reg.update();
+            reg.addEventListener('updatefound', () => {
+              const newWorker = reg.installing;
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  // New version available — could show a toast here
+                  console.log('[Cents] New version available — reload to update');
+                }
+              });
+            });
+          })
+          .catch(err => console.warn('[Cents] SW registration failed:', err));
+      });
+    }
+  </script>
   <script type="text/babel">
 const { useState, useEffect, useRef, useCallback, useMemo, createContext, useContext } = React;
 
