@@ -107,7 +107,7 @@ ul, ol { list-style: none; }
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-bottom: calc(var(--nav-h) + 16px);
+  padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 16px);
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
 }
@@ -139,15 +139,17 @@ ul, ol { list-style: none; }
 }
 .icon-btn:hover, .icon-btn:active { background: var(--surface-2); color: var(--text-primary); transform: scale(0.97); }
 .bottom-nav {
-  height: var(--nav-h);
-  background: rgba(255,255,255,0.92);
+  /* height grows to fill the iPhone home indicator zone */
+  height: calc(var(--nav-h) + env(safe-area-inset-bottom));
+  background: rgba(255,255,255,0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid var(--border);
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* icons anchor to top, safe area fills bottom */
   justify-content: space-around;
   padding: 0 4px;
+  padding-top: 0;
   padding-bottom: env(safe-area-inset-bottom);
   position: relative;
   z-index: 50;
@@ -155,11 +157,13 @@ ul, ol { list-style: none; }
 }
 .nav-item {
   flex: 1;
+  height: var(--nav-h);
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 4px;
-  padding: 8px 4px;
+  padding: 0 4px;
   border-radius: var(--radius-sm);
   color: var(--text-muted);
   font-size: 10px;
