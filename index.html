@@ -4,19 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="description" content="Cents — Minimal expense management. Track your budget with clarity." />
-  <meta name="theme-color" content="#0A0A0A" />
+  <meta name="theme-color" content="#F0F0F0" />
 
   <!-- PWA Manifest -->
   <link rel="manifest" href="/cents/manifest.json" />
 
   <!-- iOS PWA -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Cents" />
   <link rel="apple-touch-icon" href="/cents/icons/apple-touch-icon.png" />
-
-  <!-- Splash screen background for iOS -->
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
   <!-- Android / general -->
   <meta name="mobile-web-app-capable" content="yes" />
@@ -103,6 +100,8 @@ ul, ol { list-style: none; }
   position: relative;
   background: var(--bg);
   overflow: hidden;
+  /* Push content below iOS status bar on all devices (notch, Dynamic Island, etc.) */
+  padding-top: env(safe-area-inset-top);
 }
 .page-content {
   flex: 1;

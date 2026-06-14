@@ -3,7 +3,7 @@
 // Strategy: Cache-first for CDN assets, Network-first for app shell
 // ============================================================
 
-const CACHE_NAME = 'cents-v1.0';
+const CACHE_NAME = 'cents-v1.1';
 const OFFLINE_URL = '/cents/';
 
 // Assets to pre-cache on install
