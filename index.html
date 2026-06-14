@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Cents — Minimal expense management. Track your budget with clarity." />
+  <meta name="theme-color" content="#F2F2F2" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <title>Cents — Minimal Budget Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+/* ============================================================
+   CENTS — Design System & Global Styles
+   Theme: Minimal Light Grey · Black & White
+   ============================================================ */
+:root {
+  --bg: #F0F0F0;
+  --bg-alt: #EBEBEB;
+  --surface: #FFFFFF;
+  --surface-2: #F8F8F8;
+  --surface-3: #F2F2F2;
+  --border: #E2E2E2;
+  --border-strong: #CACACA;
+  --text-primary: #0A0A0A;
+  --text-secondary: #5A5A5A;
+  --text-muted: #A0A0A0;
+  --text-inverse: #FFFFFF;
+  --accent: #0A0A0A;
+  --accent-hover: #2A2A2A;
+  --warn: #C9A84C;
+  --warn-bg: #FDF8EC;
+  --danger: #C0392B;
+  --danger-bg: #FDF2F0;
+  --success: #27AE60;
+  --success-bg: #F0FDF4;
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 28px;
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow: 0 4px 16px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.05);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06);
+  --shadow-sheet: 0 -8px 40px rgba(0,0,0,0.12);
+  --nav-h: 72px;
+  --header-h: 60px;
+  --max-w: 430px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; -webkit-text-size-adjust: 100%; }
+body {
+  height: 100%;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;
+}
+input, button, select, textarea { font-family: inherit; }
+button { cursor: pointer; border: none; background: none; }
+a { text-decoration: none; color: inherit; }
+img { display: block; max-width: 100%; }
+ul, ol { list-style: none; }
+#root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--bg);
+}
+.app-frame {
+  width: 100%;
+  max-width: var(--max-w);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: var(--bg);
+  overflow: hidden;
+}
+.page-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: calc(var(--nav-h) + 16px);
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+.page-content::-webkit-scrollbar { display: none; }
+.app-header {
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+.app-header.scrolled { border-color: var(--border); }
+.header-logo { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; color: var(--text-primary); }
+.header-logo span { color: var(--text-muted); font-weight: 400; }
+.icon-btn {
+  width: 36px; height: 36px;
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  transition: all 0.15s;
+}
+.icon-btn:hover, .icon-btn:active { background: var(--surface-2); color: var(--text-primary); transform: scale(0.97); }
+.bottom-nav {
+  height: var(--nav-h);
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 4px;
+  padding-bottom: env(safe-area-inset-bottom);
+  position: relative;
+  z-index: 50;
+  flex-shrink: 0;
+}
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 4px;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  transition: all 0.2s var(--ease-out);
+  background: none;
+}
+.nav-item.active { color: var(--text-primary); }
+.nav-item svg { transition: transform 0.2s var(--ease-spring); }
+.nav-item.active svg { transform: scale(1.1); }
+.nav-item:active svg { transform: scale(0.92); }
+.nav-add {
+  width: 52px; height: 52px;
+  border-radius: var(--radius-full);
+  background: var(--accent);
+  color: var(--text-inverse);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  transition: all 0.2s var(--ease-spring);
+  flex-shrink: 0;
+}
+.nav-add:hover { transform: scale(1.06); }
+.nav-add:active { transform: scale(0.94); }
+.card { background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 20px; box-shadow: var(--shadow-sm); }
+.section-header { display: flex; align-items: center; justify-content: space-between; padding: 0 20px; margin-bottom: 12px; }
+.section-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); letter-spacing: 0.4px; text-transform: uppercase; }
+.section-action { font-size: 13px; font-weight: 500; color: var(--text-secondary); background: none; border: none; cursor: pointer; padding: 4px 8px; border-radius: var(--radius-xs); transition: all 0.15s; }
+.section-action:hover { color: var(--text-primary); background: var(--surface); }
+.budget-hero {
+  margin: 16px;
+  padding: 28px 24px;
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.budget-ring-wrap { position: relative; width: 160px; height: 160px; }
+.budget-ring-svg { transform: rotate(-90deg); }
+.ring-track { fill: none; stroke: var(--bg-alt); stroke-width: 10; }
+.ring-fill { fill: none; stroke: var(--text-primary); stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 1s var(--ease-out), stroke 0.4s; }
+.ring-fill.warn { stroke: var(--warn); }
+.ring-fill.danger { stroke: var(--danger); }
+.ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.ring-amount { font-size: 26px; font-weight: 700; letter-spacing: -1px; line-height: 1; color: var(--text-primary); }
+.ring-label { font-size: 11px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.3px; }
+.budget-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; width: 100%; background: var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+.stat-cell { background: var(--surface-2); padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.stat-value { font-size: 14px; font-weight: 700; letter-spacing: -0.3px; }
+.stat-label { font-size: 10px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.2px; text-transform: uppercase; }
+.month-selector { display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-full); padding: 6px 12px; }
+.month-label { font-size: 13px; font-weight: 600; letter-spacing: -0.2px; min-width: 90px; text-align: center; }
+.month-nav-btn { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-full); color: var(--text-secondary); transition: all 0.15s; }
+.month-nav-btn:hover { background: var(--bg-alt); color: var(--text-primary); }
+.category-list { display: flex; flex-direction: column; gap: 10px; padding: 0 16px; }
+.category-card { background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 16px 18px; box-shadow: var(--shadow-sm); transition: all 0.2s; }
+.category-card:active { transform: scale(0.99); }
+.category-card.warn-state { border-color: rgba(201,168,76,0.4); background: #FEFDF8; }
+.category-card.danger-state { border-color: rgba(192,57,43,0.3); background: #FDF9F9; }
+.category-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.category-info { display: flex; align-items: center; gap: 10px; }
+.category-icon { width: 34px; height: 34px; border-radius: var(--radius-sm); background: var(--surface-3); display: flex; align-items: center; justify-content: center; font-size: 16px; border: 1px solid var(--border); }
+.category-name { font-size: 15px; font-weight: 600; letter-spacing: -0.2px; }
+.category-sub { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+.category-amounts { text-align: right; }
+.category-spent { font-size: 16px; font-weight: 700; letter-spacing: -0.4px; }
+.category-limit { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+.progress-track { width: 100%; height: 5px; background: var(--bg-alt); border-radius: var(--radius-full); overflow: visible; position: relative; }
+.progress-fill { height: 100%; border-radius: var(--radius-full); background: var(--text-primary); transition: width 0.8s var(--ease-out), background 0.4s; max-width: 100%; }
+.progress-fill.warn { background: var(--warn); }
+.progress-fill.danger { background: var(--danger); }
+.progress-marker { position: absolute; top: -3px; width: 1px; height: 11px; border-radius: 1px; }
+.progress-marker.min-marker { background: var(--warn); }
+.progress-marker.max-marker { background: var(--danger); }
+.progress-labels { display: flex; justify-content: space-between; margin-top: 6px; }
+.progress-pct { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+.expense-list { display: flex; flex-direction: column; padding: 0 16px; }
+.expense-day-group { margin-bottom: 4px; }
+.expense-day-header { font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.3px; text-transform: uppercase; padding: 12px 4px 8px; }
+.expense-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 6px; transition: all 0.15s; }
+.expense-item:active { transform: scale(0.99); background: var(--surface-2); }
+.expense-icon { width: 38px; height: 38px; border-radius: var(--radius-sm); background: var(--surface-3); display: flex; align-items: center; justify-content: center; font-size: 17px; border: 1px solid var(--border); flex-shrink: 0; }
+.expense-info { flex: 1; min-width: 0; }
+.expense-note { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.expense-cat { font-size: 11px; color: var(--text-muted); margin-top: 2px; font-weight: 500; }
+.expense-amount { font-size: 15px; font-weight: 700; letter-spacing: -0.3px; flex-shrink: 0; }
+.expense-delete { width: 28px; height: 28px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--text-muted); flex-shrink: 0; transition: all 0.15s; opacity: 0; }
+.expense-item:hover .expense-delete { opacity: 1; }
+.expense-item:hover .expense-delete:hover { color: var(--danger); background: var(--danger-bg); }
+.sheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 100; backdrop-filter: blur(4px); animation: fadeIn 0.25s var(--ease-out); }
+.sheet-container { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: var(--max-w); background: var(--surface); border-radius: var(--radius-xl) var(--radius-xl) 0 0; z-index: 101; box-shadow: var(--shadow-sheet); animation: slideUp 0.35s var(--ease-out); max-height: 92vh; overflow-y: auto; padding-bottom: env(safe-area-inset-bottom); }
+.sheet-container::-webkit-scrollbar { display: none; }
+.sheet-handle { width: 36px; height: 4px; background: var(--border-strong); border-radius: var(--radius-full); margin: 12px auto 0; }
+.sheet-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 12px; }
+.sheet-title { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
+.sheet-body { padding: 0 20px 24px; }
+.form-group { margin-bottom: 16px; }
+.form-label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); letter-spacing: 0.3px; text-transform: uppercase; margin-bottom: 8px; }
+.form-input { width: 100%; padding: 12px 14px; background: var(--surface-2); border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 15px; font-weight: 500; color: var(--text-primary); outline: none; transition: border-color 0.15s, box-shadow 0.15s; -webkit-appearance: none; }
+.form-input:focus { border-color: var(--accent); background: var(--surface); box-shadow: 0 0 0 3px rgba(10,10,10,0.06); }
+.form-input::placeholder { color: var(--text-muted); }
+.amount-input-wrap { position: relative; }
+.amount-prefix { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 18px; font-weight: 600; color: var(--text-muted); pointer-events: none; }
+.form-input.amount { padding-left: 30px; font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+.cat-pill-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.cat-pill { padding: 8px 14px; border-radius: var(--radius-full); border: 1.5px solid var(--border); background: var(--surface-2); font-size: 13px; font-weight: 500; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; transition: all 0.15s; cursor: pointer; }
+.cat-pill:hover { border-color: var(--border-strong); color: var(--text-primary); }
+.cat-pill.selected { background: var(--accent); border-color: var(--accent); color: var(--text-inverse); }
+.btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 20px; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; transition: all 0.15s var(--ease-out); border: none; cursor: pointer; letter-spacing: -0.2px; width: 100%; }
+.btn-primary { background: var(--accent); color: var(--text-inverse); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+.btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
+.btn-primary:active { transform: translateY(0) scale(0.98); }
+.btn-secondary { background: var(--surface-2); color: var(--text-primary); border: 1.5px solid var(--border); }
+.btn-secondary:hover { background: var(--bg-alt); }
+.btn-sm { padding: 9px 14px; font-size: 13px; border-radius: var(--radius-xs); width: auto; }
+.btn-danger { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(192,57,43,0.2); }
+.btn-danger:hover { background: var(--danger); color: #fff; }
+.toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 200; display: flex; flex-direction: column; gap: 8px; width: calc(100% - 40px); max-width: 380px; pointer-events: none; }
+.toast { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow-lg); animation: toastIn 0.35s var(--ease-out) forwards; pointer-events: all; }
+.toast.removing { animation: toastOut 0.25s var(--ease-in) forwards; }
+.toast-icon { font-size: 18px; flex-shrink: 0; }
+.toast-text { flex: 1; }
+.toast-title { font-size: 13px; font-weight: 600; }
+.toast-msg { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+.toast.warn { border-color: rgba(201,168,76,0.4); background: var(--warn-bg); }
+.toast.danger { border-color: rgba(192,57,43,0.3); background: var(--danger-bg); }
+.toast.success { border-color: rgba(39,174,96,0.3); background: var(--success-bg); }
+.chart-card { margin: 0 16px 12px; background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 20px; box-shadow: var(--shadow-sm); }
+.chart-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 16px; }
+.donut-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
+.legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+.legend-name { color: var(--text-secondary); font-weight: 500; flex: 1; }
+.legend-val { color: var(--text-primary); font-weight: 700; }
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 16px; margin-bottom: 12px; }
+.stat-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 16px; box-shadow: var(--shadow-sm); }
+.stat-card-label { font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.3px; text-transform: uppercase; margin-bottom: 6px; }
+.stat-card-value { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+.stat-card-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+.settings-section { margin-bottom: 24px; }
+.settings-section-title { font-size: 11px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.8px; text-transform: uppercase; padding: 0 20px; margin-bottom: 10px; }
+.settings-list { background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border); overflow: hidden; margin: 0 16px; }
+.settings-row { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-bottom: 1px solid var(--border); transition: background 0.15s; }
+.settings-row:last-child { border-bottom: none; }
+.settings-row:active { background: var(--surface-2); }
+.settings-row-icon { width: 32px; height: 32px; border-radius: var(--radius-xs); background: var(--surface-3); display: flex; align-items: center; justify-content: center; font-size: 15px; border: 1px solid var(--border); flex-shrink: 0; }
+.settings-row-info { flex: 1; }
+.settings-row-label { font-size: 14px; font-weight: 500; }
+.settings-row-sub { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+.settings-row-action { color: var(--text-muted); }
+.cat-manage-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+.cat-manage-item:last-child { border-bottom: none; }
+.cat-manage-info { flex: 1; }
+.cat-manage-name { font-size: 14px; font-weight: 600; }
+.cat-manage-limits { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 32px; text-align: center; gap: 12px; }
+.empty-icon { font-size: 48px; opacity: 0.3; }
+.empty-title { font-size: 16px; font-weight: 600; color: var(--text-secondary); }
+.empty-sub { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+.filter-bar { display: flex; gap: 8px; padding: 12px 16px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.filter-bar::-webkit-scrollbar { display: none; }
+.filter-chip { padding: 7px 14px; border-radius: var(--radius-full); border: 1.5px solid var(--border); background: var(--surface); font-size: 13px; font-weight: 500; color: var(--text-secondary); white-space: nowrap; transition: all 0.15s; flex-shrink: 0; }
+.filter-chip:hover { border-color: var(--border-strong); color: var(--text-primary); }
+.filter-chip.active { background: var(--accent); border-color: var(--accent); color: var(--text-inverse); }
+.alert-banner { margin: 0 16px 10px; padding: 12px 14px; border-radius: var(--radius); display: flex; align-items: flex-start; gap: 10px; font-size: 13px; }
+.alert-banner.warn { background: var(--warn-bg); border: 1px solid rgba(201,168,76,0.3); }
+.alert-banner.danger { background: var(--danger-bg); border: 1px solid rgba(192,57,43,0.25); }
+.alert-banner-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.alert-banner-text { font-weight: 500; color: var(--text-secondary); line-height: 1.4; }
+.alert-banner-text strong { color: var(--text-primary); }
+.cat-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.icon-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; margin-top: 8px; }
+.icon-option { aspect-ratio: 1; border-radius: var(--radius-xs); border: 1.5px solid var(--border); background: var(--surface-2); display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; transition: all 0.12s; }
+.icon-option:hover { border-color: var(--border-strong); background: var(--surface); }
+.icon-option.selected { border-color: var(--accent); background: var(--surface); box-shadow: 0 0 0 2px rgba(10,10,10,0.1); }
+.drop-zone { border: 2px dashed var(--border-strong); border-radius: var(--radius); padding: 32px 24px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; cursor: pointer; transition: all 0.2s; background: var(--surface-2); }
+.drop-zone:hover, .drop-zone.drag-over { border-color: var(--accent); background: var(--surface); }
+.drop-zone-icon { font-size: 32px; }
+.drop-zone-title { font-size: 14px; font-weight: 600; }
+.drop-zone-sub { font-size: 12px; color: var(--text-muted); }
+.text-danger { color: var(--danger); }
+.text-warn { color: var(--warn); }
+.text-success { color: var(--success); }
+.text-muted { color: var(--text-muted); }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateX(-50%) translateY(100%); } to { transform: translateX(-50%) translateY(0); } }
+@keyframes toastIn { from { opacity: 0; transform: translateY(-12px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes toastOut { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(-8px) scale(0.97); } }
+@media (min-width: 500px) { .app-frame { box-shadow: 0 0 0 1px var(--border), 0 32px 80px rgba(0,0,0,0.08); } }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script type="text/babel">
+const { useState, useEffect, useRef, useCallback, useMemo, createContext, useContext } = React;
+
+// ─── UTILS ───────────────────────────────────────────────────
+const fmt = (n, cur = '$') => `${cur}${Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+const fmtShort = (n, cur = '$') => { if (Math.abs(n) >= 1000) return `${cur}${(n/1000).toFixed(1)}k`; return `${cur}${Math.abs(n).toFixed(0)}`; };
+const monthKey = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+const dayLabel = (dateStr) => {
+  const d = new Date(dateStr + 'T00:00:00');
+  const today = new Date(); today.setHours(0,0,0,0);
+  const yesterday = new Date(today); yesterday.setDate(today.getDate()-1);
+  if (d.getTime() === today.getTime()) return 'Today';
+  if (d.getTime() === yesterday.getTime()) return 'Yesterday';
+  return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+};
+const todayStr = () => new Date().toISOString().split('T')[0];
+const genId = () => 'id-' + Math.random().toString(36).slice(2) + Date.now();
+
+// ─── DEFAULT DATA ────────────────────────────────────────────
+const DEFAULT_CATEGORIES = [
+  { id: 'cat-food',   name: 'Food & Dining',  icon: '🍜', limit: 500,  minAlert: 350, maxAlert: 480 },
+  { id: 'cat-trans',  name: 'Transport',       icon: '🚌', limit: 200,  minAlert: 140, maxAlert: 190 },
+  { id: 'cat-shop',   name: 'Shopping',        icon: '🛍️', limit: 300,  minAlert: 220, maxAlert: 290 },
+  { id: 'cat-health', name: 'Health',          icon: '💊', limit: 150,  minAlert: 100, maxAlert: 145 },
+  { id: 'cat-ent',    name: 'Entertainment',   icon: '🎬', limit: 120,  minAlert: 80,  maxAlert: 115 },
+  { id: 'cat-subs',   name: 'Subscriptions',   icon: '📱', limit: 80,   minAlert: 60,  maxAlert: 78  },
+  { id: 'cat-misc',   name: 'Miscellaneous',   icon: '📦', limit: 200,  minAlert: 140, maxAlert: 190 },
+];
+const EMOJI_OPTIONS = ['🍜','🍕','☕','🛒','🚌','🚗','✈️','🏠','💊','🏋️','🎬','🎮','📱','💻','👗','👟','🛍️','📦','💡','🎓','💰','🏦','🎁','🌿','🐾','🧴','🍺','🎵','📚','🔧','🌍','❤️'];
+
+// ─── STORE ────────────────────────────────────────────────────
+const STORE_KEY = 'cents_v1';
+const defaultStore = () => ({ version:'1.0', currency:'$', categories: DEFAULT_CATEGORIES, budgets: { [monthKey(new Date())]: 2000 }, expenses: [] });
+const loadStore = () => { try { const r = localStorage.getItem(STORE_KEY); return r ? JSON.parse(r) : defaultStore(); } catch { return defaultStore(); } };
+const saveStore = (d) => { try { localStorage.setItem(STORE_KEY, JSON.stringify(d)); } catch {} };
+
+// ─── CONTEXTS ────────────────────────────────────────────────
+const AppCtx = createContext(null);
+const useApp = () => useContext(AppCtx);
+const ToastCtx = createContext(null);
+
+// ─── TOAST PROVIDER ──────────────────────────────────────────
+function ToastProvider({ children }) {
+  const [toasts, setToasts] = useState([]);
+  const addToast = useCallback((type, title, msg = '') => {
+    const id = Date.now() + Math.random();
+    setToasts(t => [...t, { id, type, title, msg }]);
+    setTimeout(() => {
+      setToasts(t => t.map(x => x.id === id ? { ...x, removing: true } : x));
+      setTimeout(() => setToasts(t => t.filter(x => x.id !== id)), 280);
+    }, 3500);
+  }, []);
+  const icons = { warn:'⚠️', danger:'🔴', success:'✅', info:'ℹ️' };
+  return (
+    <ToastCtx.Provider value={addToast}>
+      {children}
+      <div className="toast-container">
+        {toasts.map(t => (
+          <div key={t.id} className={`toast ${t.type}${t.removing?' removing':''}`}>
+            <span className="toast-icon">{icons[t.type]||'ℹ️'}</span>
+            <div className="toast-text">
+              <div className="toast-title">{t.title}</div>
+              {t.msg && <div className="toast-msg">{t.msg}</div>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </ToastCtx.Provider>
+  );
+}
+const useToast = () => useContext(ToastCtx);
+
+// ─── SVG ICONS ───────────────────────────────────────────────
+const I = {
+  Home: ({s=22}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
+  List: ({s=22}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>,
+  Chart: ({s=22}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>,
+  Gear: ({s=22}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>,
+  Plus: ({s=24}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>,
+  X: ({s=18}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
+  ChevL: ({s=16}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>,
+  ChevR: ({s=16}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>,
+  CRight: ({s=16}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>,
+  Trash: ({s=15}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>,
+  Down: ({s=16}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>,
+  Up: ({s=16}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>,
+  Edit: ({s=15}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>,
+};
+
+// ─── BUDGET RING ─────────────────────────────────────────────
+function BudgetRing({ spent, budget, currency }) {
+  const r = 70, circ = 2 * Math.PI * r;
+  const pct = budget > 0 ? Math.min(spent/budget, 1) : 0;
+  const offset = circ - pct * circ;
+  const cls = pct >= 1 ? 'danger' : pct >= 0.8 ? 'warn' : '';
+  const remaining = Math.max(budget - spent, 0);
+  return (
+    <div className="budget-hero">
+      <div className="budget-ring-wrap">
+        <svg className="budget-ring-svg" width="160" height="160" viewBox="0 0 160 160">
+          <circle className="ring-track" cx="80" cy="80" r={r} />
+          <circle className={`ring-fill ${cls}`} cx="80" cy="80" r={r} strokeDasharray={circ} strokeDashoffset={offset} />
+        </svg>
+        <div className="ring-center">
+          <div className="ring-amount">{fmtShort(spent, currency)}</div>
+          <div className="ring-label">of {fmtShort(budget, currency)}</div>
+        </div>
+      </div>
+      <div className="budget-stats">
+        <div className="stat-cell"><div className="stat-value">{fmt(spent, currency)}</div><div className="stat-label">Spent</div></div>
+        <div className="stat-cell"><div className={`stat-value ${pct>=1?'text-danger':pct>=0.8?'text-warn':''}`}>{fmt(remaining, currency)}</div><div className="stat-label">Left</div></div>
+        <div className="stat-cell"><div className="stat-value">{Math.round(pct*100)}%</div><div className="stat-label">Used</div></div>
+      </div>
+    </div>
+  );
+}
+
+// ─── CATEGORY CARD ───────────────────────────────────────────
+function CategoryCard({ cat, spent, currency, onClick }) {
+  const pct = cat.limit > 0 ? spent/cat.limit : 0;
+  const state = spent >= cat.maxAlert ? 'danger' : spent >= cat.minAlert ? 'warn' : '';
+  const minPct = cat.limit > 0 ? (cat.minAlert/cat.limit)*100 : 0;
+  const maxPct = cat.limit > 0 ? (cat.maxAlert/cat.limit)*100 : 0;
+  return (
+    <div className={`category-card ${state ? state+'-state' : ''}`} onClick={onClick} style={{ cursor: onClick?'pointer':'default' }}>
+      <div className="category-top">
+        <div className="category-info">
+          <div className="category-icon">{cat.icon}</div>
+          <div>
+            <div className="category-name">{cat.name}</div>
+            <div className="category-sub">{Math.round(pct*100)}% of limit</div>
+          </div>
+        </div>
+        <div className="category-amounts">
+          <div className={`category-spent ${state==='danger'?'text-danger':state==='warn'?'text-warn':''}`}>{fmt(spent, currency)}</div>
+          <div className="category-limit">of {fmt(cat.limit, currency)}</div>
+        </div>
+      </div>
+      <div className="progress-track">
+        <div className={`progress-fill ${state}`} style={{ width: `${Math.min(pct,1)*100}%` }} />
+        <div className="progress-marker min-marker" style={{ left:`${Math.min(minPct,100)}%` }} />
+        <div className="progress-marker max-marker" style={{ left:`${Math.min(maxPct,100)}%` }} />
+      </div>
+      <div className="progress-labels">
+        <span className="progress-pct">{fmt(0, currency)}</span>
+        <span className="progress-pct">{fmt(cat.limit, currency)}</span>
+      </div>
+    </div>
+  );
+}
+
+// ─── EXPENSE ITEM ────────────────────────────────────────────
+function ExpenseItem({ expense, categories, currency, onDelete }) {
+  const cat = categories.find(c => c.id === expense.categoryId);
+  return (
+    <div className="expense-item">
+      <div className="expense-icon">{cat?.icon || '📦'}</div>
+      <div className="expense-info">
+        <div className="expense-note">{expense.note || cat?.name || 'Expense'}</div>
+        <div className="expense-cat">{cat?.name || 'Uncategorized'}</div>
+      </div>
+      <div className="expense-amount">{fmt(expense.amount, currency)}</div>
+      {onDelete && (
+        <button className="expense-delete" onClick={e => { e.stopPropagation(); onDelete(expense.id); }}><I.Trash /></button>
+      )}
+    </div>
+  );
+}
+
+// ─── MONTH SELECTOR ──────────────────────────────────────────
+function MonthSelector({ current, onChange }) {
+  const prev = () => { const d = new Date(current+'-01'); d.setMonth(d.getMonth()-1); onChange(monthKey(d)); };
+  const next = () => { const d = new Date(current+'-01'); d.setMonth(d.getMonth()+1); if (monthKey(d) <= monthKey(new Date())) onChange(monthKey(d)); };
+  const isNow = current === monthKey(new Date());
+  const d = new Date(current+'-01');
+  return (
+    <div className="month-selector">
+      <button className="month-nav-btn" onClick={prev}><I.ChevL /></button>
+      <span className="month-label">{d.toLocaleDateString('en-US', { month:'short', year:'numeric' })}</span>
+      <button className="month-nav-btn" onClick={next} style={{ opacity:isNow?0.3:1, pointerEvents:isNow?'none':'auto' }}><I.ChevR /></button>
+    </div>
+  );
+}
+
+// ─── BOTTOM SHEET ────────────────────────────────────────────
+function BottomSheet({ title, onClose, children }) {
+  return (
+    <>
+      <div className="sheet-overlay" onClick={onClose} />
+      <div className="sheet-container">
+        <div className="sheet-handle" />
+        <div className="sheet-header">
+          <div className="sheet-title">{title}</div>
+          <button className="icon-btn" onClick={onClose}><I.X /></button>
+        </div>
+        <div className="sheet-body">{children}</div>
+      </div>
+    </>
+  );
+}
+
+// ─── ADD EXPENSE SHEET ───────────────────────────────────────
+function AddExpenseSheet({ onClose, preselectedCat }) {
+  const { data, addExpense } = useApp();
+  const toast = useToast();
+  const [amount, setAmount] = useState('');
+  const [catId, setCatId] = useState(preselectedCat || data.categories[0]?.id || '');
+  const [note, setNote] = useState('');
+  const [date, setDate] = useState(todayStr());
+  const amountRef = useRef(null);
+  useEffect(() => { setTimeout(() => amountRef.current?.focus(), 100); }, []);
+  const handleSubmit = () => {
+    const num = parseFloat(amount);
+    if (isNaN(num) || num <= 0) { toast('warn', 'Invalid amount', 'Enter a valid amount'); return; }
+    if (!catId) { toast('warn', 'No category', 'Select a category'); return; }
+    addExpense({ id: genId(), amount: num, categoryId: catId, note: note.trim(), date });
+    toast('success', 'Expense added', `${fmt(num, data.currency)} recorded`);
+    onClose();
+  };
+  return (
+    <BottomSheet title="Add Expense" onClose={onClose}>
+      <div className="form-group">
+        <label className="form-label">Amount</label>
+        <div className="amount-input-wrap">
+          <span className="amount-prefix">{data.currency}</span>
+          <input ref={amountRef} className="form-input amount" type="number" inputMode="decimal" placeholder="0.00" value={amount} onChange={e => setAmount(e.target.value)} onKeyDown={e => e.key==='Enter' && handleSubmit()} />
+        </div>
+      </div>
+      <div className="form-group">
+        <label className="form-label">Category</label>
+        <div className="cat-pill-grid">
+          {data.categories.map(c => (
+            <button key={c.id} className={`cat-pill ${catId===c.id?'selected':''}`} onClick={() => setCatId(c.id)}>
+              <span>{c.icon}</span>{c.name}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="form-group">
+        <label className="form-label">Note (optional)</label>
+        <input className="form-input" type="text" placeholder="What was this for?" value={note} onChange={e => setNote(e.target.value)} />
+      </div>
+      <div className="form-group">
+        <label className="form-label">Date</label>
+        <input className="form-input" type="date" value={date} onChange={e => setDate(e.target.value)} max={todayStr()} />
+      </div>
+      <button className="btn btn-primary" id="btn-add-expense" onClick={handleSubmit}><I.Plus s={18} />Add Expense</button>
+    </BottomSheet>
+  );
+}
+
+// ─── DASHBOARD ───────────────────────────────────────────────
+function DashboardPage({ onAddExpense }) {
+  const { data, currentMonth, setCurrentMonth, getMonthExpenses, getCategorySpent } = useApp();
+  const [scrolled, setScrolled] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const h = () => setScrolled(el.scrollTop > 8);
+    el.addEventListener('scroll', h);
+    return () => el.removeEventListener('scroll', h);
+  }, []);
+  const expenses = getMonthExpenses(currentMonth);
+  const budget = data.budgets[currentMonth] || 0;
+  const totalSpent = expenses.reduce((s, e) => s + e.amount, 0);
+  const catSpent = useMemo(() => {
+    const m = {};
+    data.categories.forEach(c => { m[c.id] = getCategorySpent(c.id, currentMonth); });
+    return m;
+  }, [data, currentMonth]);
+  const alerts = useMemo(() =>
+    data.categories.map(c => ({ cat:c, spent:catSpent[c.id]||0 }))
+      .filter(({ cat, spent }) => spent >= cat.minAlert)
+      .map(({ cat, spent }) => ({ cat, spent, type: spent>=cat.maxAlert?'danger':'warn' })),
+  [catSpent, data.categories]);
+  const recent = useMemo(() => [...expenses].sort((a,b) => b.date.localeCompare(a.date)).slice(0,5), [expenses]);
+  return (
+    <div className="page-content" ref={ref} id="page-dashboard">
+      <div className={`app-header ${scrolled?'scrolled':''}`}>
+        <div className="header-logo">cents<span>.</span></div>
+        <MonthSelector current={currentMonth} onChange={setCurrentMonth} />
+      </div>
+      <BudgetRing spent={totalSpent} budget={budget} currency={data.currency} />
+      {alerts.map(a => (
+        <div key={a.cat.id} className={`alert-banner ${a.type}`}>
+          <span className="alert-banner-icon">{a.type==='danger'?'🔴':'⚠️'}</span>
+          <span className="alert-banner-text"><strong>{a.cat.name}</strong> — {a.type==='danger'?'Max limit reached!':'Approaching limit'} ({fmt(a.spent, data.currency)} / {fmt(a.cat.maxAlert, data.currency)})</span>
+        </div>
+      ))}
+      <div className="section-header"><span className="section-title">Categories</span></div>
+      <div className="category-list">
+        {data.categories.length === 0
+          ? <div className="empty-state"><div className="empty-icon">📂</div><div className="empty-title">No categories yet</div><div className="empty-sub">Add categories in Settings to start tracking.</div></div>
+          : data.categories.map(cat => <CategoryCard key={cat.id} cat={cat} spent={catSpent[cat.id]||0} currency={data.currency} onClick={() => onAddExpense(cat.id)} />)
+        }
+      </div>
+      <div className="section-header" style={{ marginTop: 20 }}>
+        <span className="section-title">Recent</span>
+      </div>
+      <div className="expense-list">
+        {recent.length === 0
+          ? <div className="empty-state"><div className="empty-icon">🧾</div><div className="empty-title">No expenses yet</div><div className="empty-sub">Tap + to log your first expense.</div></div>
+          : recent.map(e => <ExpenseItem key={e.id} expense={e} categories={data.categories} currency={data.currency} />)
+        }
+      </div>
+    </div>
+  );
+}
+
+// ─── HISTORY ─────────────────────────────────────────────────
+function HistoryPage() {
+  const { data, currentMonth, setCurrentMonth, getMonthExpenses, deleteExpense } = useApp();
+  const toast = useToast();
+  const [filterCat, setFilterCat] = useState('all');
+  const expenses = getMonthExpenses(currentMonth);
+  const filtered = filterCat === 'all' ? expenses : expenses.filter(e => e.categoryId === filterCat);
+  const grouped = useMemo(() => {
+    const map = {};
+    [...filtered].sort((a,b) => b.date.localeCompare(a.date)).forEach(e => { if (!map[e.date]) map[e.date]=[]; map[e.date].push(e); });
+    return Object.entries(map).sort((a,b) => b[0].localeCompare(a[0]));
+  }, [filtered]);
+  return (
+    <div className="page-content" id="page-history">
+      <div className="app-header">
+        <div className="header-logo">History</div>
+        <MonthSelector current={currentMonth} onChange={setCurrentMonth} />
+      </div>
+      <div className="filter-bar">
+        <button className={`filter-chip ${filterCat==='all'?'active':''}`} onClick={() => setFilterCat('all')}>All</button>
+        {data.categories.map(c => <button key={c.id} className={`filter-chip ${filterCat===c.id?'active':''}`} onClick={() => setFilterCat(c.id)}>{c.icon} {c.name}</button>)}
+      </div>
+      <div className="expense-list">
+        {grouped.length === 0
+          ? <div className="empty-state"><div className="empty-icon">📋</div><div className="empty-title">No expenses found</div><div className="empty-sub">Try a different filter or month.</div></div>
+          : grouped.map(([date, exps]) => (
+            <div key={date} className="expense-day-group">
+              <div className="expense-day-header">{dayLabel(date)} · {fmt(exps.reduce((s,e)=>s+e.amount,0), data.currency)}</div>
+              {exps.map(e => <ExpenseItem key={e.id} expense={e} categories={data.categories} currency={data.currency} onDelete={id => { deleteExpense(id); toast('info','Expense removed',''); }} />)}
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  );
+}
+
+// ─── ANALYTICS ───────────────────────────────────────────────
+const CHART_GREYS = ['#0A0A0A','#2E2E2E','#555555','#7A7A7A','#9E9E9E','#BCBCBC','#D0D0D0'];
+
+function AnalyticsPage() {
+  const { data, currentMonth, setCurrentMonth, getMonthExpenses, getCategorySpent } = useApp();
+  const donutRef = useRef(null), barRef = useRef(null);
+  const donutChart = useRef(null), barChart = useRef(null);
+  const expenses = getMonthExpenses(currentMonth);
+  const budget = data.budgets[currentMonth] || 0;
+  const totalSpent = expenses.reduce((s,e) => s+e.amount, 0);
+  const catData = useMemo(() =>
+    data.categories.map((c,i) => ({ cat:c, spent:getCategorySpent(c.id,currentMonth), color:CHART_GREYS[i%CHART_GREYS.length] })).filter(d => d.spent > 0),
+  [data, currentMonth]);
+  const dailyData = useMemo(() => {
+    const d = new Date(currentMonth+'-01'), now = new Date(), days = [];
+    while (d.getMonth() === new Date(currentMonth+'-01').getMonth() && d <= now) {
+      const key = d.toISOString().split('T')[0];
+      days.push({ label: d.getDate().toString(), value: expenses.filter(e => e.date===key).reduce((s,e) => s+e.amount,0) });
+      d.setDate(d.getDate()+1);
+    }
+    return days;
+  }, [expenses, currentMonth]);
+  const avgPerDay = useMemo(() => { const active = dailyData.filter(d=>d.value>0); return active.length ? totalSpent/active.length : 0; }, [dailyData, totalSpent]);
+  const maxDay = dailyData.reduce((m,d) => d.value>m.value?d:m, { label:'-', value:0 });
+  const topCat = catData.reduce((m,d) => d.spent>m.spent?d:m, { cat:{name:'-'}, spent:0 });
+
+  useEffect(() => {
+    if (!donutRef.current || catData.length===0) return;
+    if (donutChart.current) donutChart.current.destroy();
+    donutChart.current = new Chart(donutRef.current, {
+      type:'doughnut',
+      data:{ labels:catData.map(d=>d.cat.name), datasets:[{ data:catData.map(d=>d.spent), backgroundColor:catData.map(d=>d.color), borderWidth:2, borderColor:'#fff', hoverBorderWidth:3 }] },
+      options:{ cutout:'68%', responsive:true, plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:ctx => ` ${fmt(ctx.raw,data.currency)} (${Math.round(ctx.raw/totalSpent*100)}%)` }, backgroundColor:'#0A0A0A', titleColor:'#fff', bodyColor:'#ccc', cornerRadius:10, padding:10 } } }
+    });
+    return () => { if (donutChart.current) { donutChart.current.destroy(); donutChart.current=null; } };
+  }, [catData, totalSpent]);
+
+  useEffect(() => {
+    if (!barRef.current || dailyData.length===0) return;
+    if (barChart.current) barChart.current.destroy();
+    barChart.current = new Chart(barRef.current, {
+      type:'bar',
+      data:{ labels:dailyData.map(d=>d.label), datasets:[{ data:dailyData.map(d=>d.value), backgroundColor:dailyData.map(d=>d.value>0?'#0A0A0A':'#E8E8E8'), borderRadius:4, borderSkipped:false }] },
+      options:{ responsive:true, plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:ctx => ` ${fmt(ctx.raw,data.currency)}` }, backgroundColor:'#0A0A0A', titleColor:'#fff', bodyColor:'#ccc', cornerRadius:10, padding:10 } }, scales:{ x:{ grid:{display:false}, ticks:{color:'#A0A0A0',font:{size:10,family:'Inter'},maxRotation:0}, border:{display:false} }, y:{ grid:{color:'#F0F0F0'}, ticks:{color:'#A0A0A0',font:{size:10,family:'Inter'},callback:v=>fmtShort(v,data.currency)}, border:{display:false} } } }
+    });
+    return () => { if (barChart.current) { barChart.current.destroy(); barChart.current=null; } };
+  }, [dailyData]);
+
+  return (
+    <div className="page-content" id="page-analytics">
+      <div className="app-header"><div className="header-logo">Analytics</div><MonthSelector current={currentMonth} onChange={setCurrentMonth} /></div>
+      <div className="stats-grid">
+        <div className="stat-card"><div className="stat-card-label">Total Spent</div><div className="stat-card-value">{fmt(totalSpent, data.currency)}</div><div className="stat-card-sub">of {fmt(budget, data.currency)}</div></div>
+        <div className="stat-card"><div className="stat-card-label">Avg / Day</div><div className="stat-card-value">{fmt(avgPerDay, data.currency)}</div><div className="stat-card-sub">on active days</div></div>
+        <div className="stat-card"><div className="stat-card-label">Biggest Day</div><div className="stat-card-value">{fmt(maxDay.value, data.currency)}</div><div className="stat-card-sub">Day {maxDay.label}</div></div>
+        <div className="stat-card"><div className="stat-card-label">Top Category</div><div className="stat-card-value" style={{fontSize:14}}>{topCat.cat.name}</div><div className="stat-card-sub">{fmt(topCat.spent, data.currency)}</div></div>
+      </div>
+      <div className="chart-card">
+        <div className="chart-title">Spending by Category</div>
+        {catData.length === 0
+          ? <div className="empty-state" style={{padding:'24px'}}><div className="empty-icon">📊</div><div className="empty-sub">No expenses this month</div></div>
+          : <>
+              <div style={{maxHeight:220}}><canvas ref={donutRef} /></div>
+              <div className="donut-legend">
+                {catData.map(d => (
+                  <div key={d.cat.id} className="legend-item">
+                    <div className="legend-dot" style={{background:d.color}} />
+                    <span className="legend-name">{d.cat.icon} {d.cat.name}</span>
+                    <span className="legend-val">{Math.round(d.spent/totalSpent*100)}%</span>
+                  </div>
+                ))}
+              </div>
+            </>
+        }
+      </div>
+      <div className="chart-card">
+        <div className="chart-title">Daily Spending — {new Date(currentMonth+'-01').toLocaleDateString('en-US',{month:'long',year:'numeric'})}</div>
+        {dailyData.every(d=>d.value===0)
+          ? <div className="empty-state" style={{padding:'24px'}}><div className="empty-icon">📈</div><div className="empty-sub">No expenses this month</div></div>
+          : <div style={{maxHeight:200}}><canvas ref={barRef} /></div>
+        }
+      </div>
+    </div>
+  );
+}
+
+// ─── CATEGORY FORM ───────────────────────────────────────────
+function CategoryForm({ initial, onSave, onCancel }) {
+  const [name, setName] = useState(initial?.name||'');
+  const [icon, setIcon] = useState(initial?.icon||'📦');
+  const [limit, setLimit] = useState(initial?.limit?.toString()||'');
+  const [minAlert, setMinAlert] = useState(initial?.minAlert?.toString()||'');
+  const [maxAlert, setMaxAlert] = useState(initial?.maxAlert?.toString()||'');
+  const toast = useToast();
+  const handleSave = () => {
+    if (!name.trim()) { toast('warn','Name required',''); return; }
+    const lim = parseFloat(limit)||0;
+    if (lim <= 0) { toast('warn','Set a limit','Limit must be > 0'); return; }
+    onSave({ name:name.trim(), icon, limit:lim, minAlert:parseFloat(minAlert)||0, maxAlert:parseFloat(maxAlert)||0 });
+  };
+  return (
+    <div>
+      <div className="form-group"><label className="form-label">Category Name</label><input className="form-input" placeholder="e.g., Food & Dining" value={name} onChange={e=>setName(e.target.value)} /></div>
+      <div className="form-group">
+        <label className="form-label">Icon</label>
+        <div className="icon-grid">{EMOJI_OPTIONS.map(em => <button key={em} className={`icon-option ${icon===em?'selected':''}`} onClick={()=>setIcon(em)}>{em}</button>)}</div>
+      </div>
+      <div className="cat-form-grid">
+        <div className="form-group"><label className="form-label">Limit</label><input className="form-input" type="number" placeholder="500" value={limit} onChange={e=>setLimit(e.target.value)} /></div>
+        <div className="form-group"><label className="form-label">Min Alert</label><input className="form-input" type="number" placeholder="350" value={minAlert} onChange={e=>setMinAlert(e.target.value)} /></div>
+      </div>
+      <div className="form-group"><label className="form-label">Max Alert</label><input className="form-input" type="number" placeholder="480" value={maxAlert} onChange={e=>setMaxAlert(e.target.value)} /></div>
+      <div style={{display:'flex',gap:10}}>
+        <button className="btn btn-secondary" style={{flex:1}} onClick={onCancel}>Cancel</button>
+        <button className="btn btn-primary" style={{flex:2}} onClick={handleSave}>Save Category</button>
+      </div>
+    </div>
+  );
+}
+
+// ─── SETTINGS ────────────────────────────────────────────────
+function SettingsPage() {
+  const { data, updateBudget, addCategory, updateCategory, deleteCategory, currentMonth, exportData, importData, setCurrency } = useApp();
+  const toast = useToast();
+  const [budgetInput, setBudgetInput] = useState((data.budgets[currentMonth]||'').toString());
+  const [showCatForm, setShowCatForm] = useState(false);
+  const [editingCat, setEditingCat] = useState(null);
+  const [showCurrSheet, setShowCurrSheet] = useState(false);
+  const fileRef = useRef(null);
+  useEffect(() => { setBudgetInput((data.budgets[currentMonth]||'').toString()); }, [currentMonth, data.budgets]);
+  const handleBudgetSave = () => {
+    const val = parseFloat(budgetInput);
+    if (isNaN(val)||val<=0) { toast('warn','Invalid budget',''); return; }
+    updateBudget(currentMonth, val);
+    toast('success','Budget updated',`${fmt(val,data.currency)}`);
+  };
+  const handleExport = () => {
+    const blob = new Blob([exportData()], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href=url; a.download=`cents_${todayStr()}.json`; a.click();
+    URL.revokeObjectURL(url);
+    toast('success','Exported!','Data downloaded.');
+  };
+  const handleImport = (e) => {
+    const file = e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => { const ok = importData(ev.target.result); toast(ok?'success':'danger', ok?'Imported!':'Import failed', ok?'Data restored.':'Invalid file.'); };
+    reader.readAsText(file); e.target.value='';
+  };
+  const CURRENCIES = ['$','€','£','¥','₹','₩','CHF','A$','C$'];
+  const monthStr = new Date(currentMonth+'-01').toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  return (
+    <div className="page-content" id="page-settings">
+      <div className="app-header"><div className="header-logo">Settings</div></div>
+      <div className="settings-section">
+        <div className="settings-section-title">Budget — {monthStr}</div>
+        <div className="settings-list">
+          <div className="settings-row" style={{gap:10,flexWrap:'wrap'}}>
+            <div className="settings-row-icon">💰</div>
+            <div className="settings-row-info"><div className="settings-row-label">Monthly Budget</div></div>
+            <div className="amount-input-wrap" style={{flex:1,minWidth:120}}>
+              <span className="amount-prefix" style={{fontSize:14,left:10}}>{data.currency}</span>
+              <input className="form-input" type="number" style={{paddingLeft:26,paddingTop:8,paddingBottom:8,fontSize:14}} value={budgetInput} onChange={e=>setBudgetInput(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleBudgetSave()} placeholder="2000" />
+            </div>
+            <button className="btn btn-primary btn-sm" id="btn-save-budget" onClick={handleBudgetSave}>Save</button>
+          </div>
+          <div className="settings-row" style={{cursor:'pointer'}} onClick={()=>setShowCurrSheet(true)}>
+            <div className="settings-row-icon">💱</div>
+            <div className="settings-row-info"><div className="settings-row-label">Currency</div><div className="settings-row-sub">Currently: {data.currency}</div></div>
+            <div className="settings-row-action"><I.CRight /></div>
+          </div>
+        </div>
+      </div>
+      <div className="settings-section">
+        <div className="settings-section-title">Categories ({data.categories.length})</div>
+        <div className="settings-list">
+          {data.categories.map(cat => (
+            <div key={cat.id} className="cat-manage-item">
+              <div className="category-icon" style={{width:32,height:32,fontSize:15}}>{cat.icon}</div>
+              <div className="cat-manage-info">
+                <div className="cat-manage-name">{cat.name}</div>
+                <div className="cat-manage-limits">Limit: {fmt(cat.limit,data.currency)} · Min: {fmt(cat.minAlert,data.currency)} · Max: {fmt(cat.maxAlert,data.currency)}</div>
+              </div>
+              <button className="icon-btn" style={{marginRight:4}} onClick={()=>{setEditingCat(cat);setShowCatForm(true);}}><I.Edit /></button>
+              <button className="icon-btn" onClick={()=>{deleteCategory(cat.id);toast('info','Deleted',cat.name);}}><I.Trash /></button>
+            </div>
+          ))}
+          <div className="settings-row" style={{cursor:'pointer',justifyContent:'center',gap:8}} onClick={()=>{setEditingCat(null);setShowCatForm(true);}}>
+            <I.Plus s={16} /><span style={{fontSize:14,fontWeight:600}}>Add Category</span>
+          </div>
+        </div>
+      </div>
+      <div className="settings-section">
+        <div className="settings-section-title">Data</div>
+        <div style={{padding:'0 16px',display:'flex',flexDirection:'column',gap:10}}>
+          <button className="btn btn-secondary" id="btn-export" onClick={handleExport}><I.Down />Export JSON</button>
+          <div className="drop-zone" onClick={()=>fileRef.current?.click()} onDrop={e=>{e.preventDefault();const f=e.dataTransfer.files[0];if(f){const r=new FileReader();r.onload=ev=>{const ok=importData(ev.target.result);toast(ok?'success':'danger',ok?'Imported!':'Failed',ok?'Restored.':'Bad file.');};r.readAsText(f);}}} onDragOver={e=>e.preventDefault()}>
+            <div className="drop-zone-icon">📂</div>
+            <div className="drop-zone-title">Import JSON</div>
+            <div className="drop-zone-sub">Tap or drag & drop your backup</div>
+          </div>
+          <input ref={fileRef} type="file" accept=".json" style={{display:'none'}} onChange={handleImport} />
+        </div>
+      </div>
+      <div className="settings-section">
+        <div className="settings-section-title">Danger Zone</div>
+        <div style={{padding:'0 16px'}}>
+          <button className="btn btn-danger" onClick={()=>{if(confirm('Delete ALL data? Cannot be undone.')){localStorage.removeItem(STORE_KEY);window.location.reload();}}}>🗑️ Clear All Data</button>
+        </div>
+      </div>
+      <div style={{height:32}} />
+      {showCatForm && (
+        <BottomSheet title={editingCat?'Edit Category':'New Category'} onClose={()=>{setShowCatForm(false);setEditingCat(null);}}>
+          <CategoryForm initial={editingCat} onSave={vals=>{
+            if (editingCat) updateCategory({...editingCat,...vals});
+            else addCategory({id:genId(),...vals});
+            setShowCatForm(false);setEditingCat(null);
+            toast('success',editingCat?'Updated':'Added',vals.name);
+          }} onCancel={()=>{setShowCatForm(false);setEditingCat(null);}} />
+        </BottomSheet>
+      )}
+      {showCurrSheet && (
+        <BottomSheet title="Currency" onClose={()=>setShowCurrSheet(false)}>
+          <div className="cat-pill-grid">
+            {CURRENCIES.map(c => <button key={c} className={`cat-pill ${data.currency===c?'selected':''}`} onClick={()=>{setCurrency(c);setShowCurrSheet(false);toast('success','Currency updated',c);}}>{c}</button>)}
+          </div>
+        </BottomSheet>
+      )}
+    </div>
+  );
+}
+
+// ─── BOTTOM NAV ──────────────────────────────────────────────
+const NAV = [
+  { id:'dashboard', label:'Home',    Icon:I.Home  },
+  { id:'history',   label:'History', Icon:I.List  },
+  { id:'analytics', label:'Charts',  Icon:I.Chart },
+  { id:'settings',  label:'Settings',Icon:I.Gear  },
+];
+function BottomNav({ page, onNav, onAdd }) {
+  return (
+    <nav className="bottom-nav">
+      {NAV.slice(0,2).map(n => <button key={n.id} className={`nav-item ${page===n.id?'active':''}`} onClick={()=>onNav(n.id)}><n.Icon s={21}/>{n.label}</button>)}
+      <button className="nav-add" id="btn-nav-add" onClick={onAdd} aria-label="Add expense"><I.Plus s={22}/></button>
+      {NAV.slice(2).map(n => <button key={n.id} className={`nav-item ${page===n.id?'active':''}`} onClick={()=>onNav(n.id)}><n.Icon s={21}/>{n.label}</button>)}
+    </nav>
+  );
+}
+
+// ─── APP PROVIDER ────────────────────────────────────────────
+function AppProvider({ children }) {
+  const [data, setData] = useState(() => loadStore());
+  const [currentMonth, setCurrentMonth] = useState(() => monthKey(new Date()));
+  const toast = useToast();
+  const prevAlerted = useRef(new Set());
+  useEffect(() => { saveStore(data); }, [data]);
+  const getMonthExpenses = useCallback((month) => data.expenses.filter(e => e.date.startsWith(month)), [data.expenses]);
+  const getCategorySpent = useCallback((catId, month) => data.expenses.filter(e => e.categoryId===catId && e.date.startsWith(month)).reduce((s,e) => s+e.amount, 0), [data.expenses]);
+  const addExpense = useCallback((expense) => {
+    setData(d => {
+      const nd = { ...d, expenses: [...d.expenses, expense] };
+      const month = expense.date.slice(0,7);
+      d.categories.forEach(cat => {
+        const spent = nd.expenses.filter(e => e.categoryId===cat.id && e.date.startsWith(month)).reduce((s,e) => s+e.amount,0);
+        const key = `${cat.id}-${month}`;
+        if (spent >= cat.maxAlert && !prevAlerted.current.has(key+'-max')) {
+          prevAlerted.current.add(key+'-max');
+          setTimeout(() => toast('danger', `${cat.icon} ${cat.name} — Max Limit!`, `${fmt(spent,d.currency)} of ${fmt(cat.maxAlert,d.currency)}`), 80);
+        } else if (spent >= cat.minAlert && !prevAlerted.current.has(key+'-min')) {
+          prevAlerted.current.add(key+'-min');
+          setTimeout(() => toast('warn', `${cat.icon} ${cat.name} — Near Limit`, `${fmt(spent,d.currency)} / ${fmt(cat.minAlert,d.currency)} threshold`), 80);
+        }
+      });
+      return nd;
+    });
+  }, [toast]);
+  const deleteExpense = useCallback((id) => setData(d => ({ ...d, expenses: d.expenses.filter(e => e.id!==id) })), []);
+  const updateBudget = useCallback((month, amount) => setData(d => ({ ...d, budgets: { ...d.budgets, [month]: amount } })), []);
+  const addCategory = useCallback((cat) => setData(d => ({ ...d, categories: [...d.categories, cat] })), []);
+  const updateCategory = useCallback((cat) => setData(d => ({ ...d, categories: d.categories.map(c => c.id===cat.id?cat:c) })), []);
+  const deleteCategory = useCallback((id) => setData(d => ({ ...d, categories: d.categories.filter(c => c.id!==id), expenses: d.expenses.filter(e => e.categoryId!==id) })), []);
+  const setCurrency = useCallback((cur) => setData(d => ({ ...d, currency: cur })), []);
+  const exportData = useCallback(() => JSON.stringify(data, null, 2), [data]);
+  const importData = useCallback((jsonStr) => { try { const p=JSON.parse(jsonStr); if(!p.categories||!p.expenses) return false; setData({...defaultStore(),...p}); return true; } catch { return false; } }, []);
+  return (
+    <AppCtx.Provider value={{ data, currentMonth, setCurrentMonth, getMonthExpenses, getCategorySpent, addExpense, deleteExpense, updateBudget, addCategory, updateCategory, deleteCategory, setCurrency, exportData, importData }}>
+      {children}
+    </AppCtx.Provider>
+  );
+}
+
+// ─── ROOT ────────────────────────────────────────────────────
+function App() {
+  const [page, setPage] = useState('dashboard');
+  const [showAdd, setShowAdd] = useState(false);
+  const [preselectedCat, setPreselectedCat] = useState(null);
+  const handleAddExpense = (catId=null) => { setPreselectedCat(catId); setShowAdd(true); };
+  const renderPage = () => {
+    switch(page) {
+      case 'dashboard': return <DashboardPage onAddExpense={handleAddExpense} />;
+      case 'history':   return <HistoryPage />;
+      case 'analytics': return <AnalyticsPage />;
+      case 'settings':  return <SettingsPage />;
+      default:          return <DashboardPage onAddExpense={handleAddExpense} />;
+    }
+  };
+  return (
+    <ToastProvider>
+      <AppProvider>
+        <div className="app-frame">
+          {renderPage()}
+          <BottomNav page={page} onNav={setPage} onAdd={() => handleAddExpense(null)} />
+        </div>
+        {showAdd && <AddExpenseSheet onClose={() => { setShowAdd(false); setPreselectedCat(null); }} preselectedCat={preselectedCat} />}
+      </AppProvider>
+    </ToastProvider>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
