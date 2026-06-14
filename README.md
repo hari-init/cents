@@ -6,7 +6,7 @@ A beautifully minimal, mobile-first budget tracker built as a single-file web ap
 
 ## Live App
 
-🔗 **[Open on GitHub Pages](https://YOUR_USERNAME.github.io/cents)**
+🔗 **[Open on GitHub Pages](https://hari-init.github.io/cents)**
 
 Scan this on your phone — it's optimized for mobile.
 
